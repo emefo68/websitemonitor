@@ -2,6 +2,8 @@ package model;
 
 import observer.Observer;
 import observer.Subject;
+import strategy.ComparisonStrategy;
+import strategy.HtmlComparisonStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +12,18 @@ public class Website implements Subject {
     private String url;
     private String lastKnownContent;
     private List<Observer> observers;
+    private ComparisonStrategy comparisonStrategy;
 
     public Website(String url) {
         this.url = url;
         this.lastKnownContent = "";
         this.observers = new ArrayList<>();
+        this.comparisonStrategy = new HtmlComparisonStrategy();
     }
 
     public boolean checkForUpdates() {
         String currentContent = fetchContent();
-        if (!currentContent.equals(lastKnownContent)) {
+        if (!comparisonStrategy.isIdentical(lastKnownContent, currentContent)) {
             lastKnownContent = currentContent;
             notifyObservers();
             return true;
@@ -28,7 +32,7 @@ public class Website implements Subject {
     }
 
     private String fetchContent() {
-        return "MOCK-CONTENT";
+        return "<html><body><h1>MOCK-CONTENT</h1></body></html>";
     }
 
     public String getUrl() { return url; }
