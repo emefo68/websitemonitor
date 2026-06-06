@@ -9,7 +9,9 @@ public class SubscriptionController {
 
     public Subscription subscribe(User user, String url, int frequencyMinutes, Channel channel) {
         Website website = new Website(url);
-        return user.createSubscription(website, frequencyMinutes, channel);
+        Subscription subscription = user.createSubscription(website, frequencyMinutes, channel);
+        website.attach(subscription);
+        return subscription;
     }
 
     public void modify(Subscription subscription, int newFrequency, Channel newChannel) {
@@ -18,6 +20,7 @@ public class SubscriptionController {
     }
 
     public void cancel(User user, Subscription subscription) {
+        subscription.getWebsite().detach(subscription);
         user.removeSubscription(subscription);
     }
 }

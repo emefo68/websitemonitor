@@ -1,6 +1,9 @@
 package model;
 
-public class Subscription {
+import notification.Notification;
+import observer.Observer;
+
+public class Subscription implements Observer {
     private Website website;
     private User user;
     private int frequencyMinutes;
@@ -11,6 +14,13 @@ public class Subscription {
         this.user = user;
         this.frequencyMinutes = frequencyMinutes;
         this.channel = channel;
+    }
+
+    @Override
+    public void update(Website updatedWebsite) {
+        String message = "Update on: " + updatedWebsite.getUrl();
+        Notification notification = new Notification(message, user, channel);
+        notification.deliver();
     }
 
     public Website getWebsite() {
